@@ -32,7 +32,7 @@ language either from a theoretical or a practical perspective.
 
 ## License
 
-Copyright: (c) 2020, the author.
+Copyright: (c) 2021, the authors.
 
 All data, code and documentation in this repository is published under the
 [Creative Commons Attribution 4.0 Licence](http://creativecommons.org/licenses/by/4.0/)
