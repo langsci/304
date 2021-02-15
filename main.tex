@@ -1,0 +1,56 @@
+\documentclass[output=book,collection,multiauthors
+            ,colorlinks, citecolor=brown
+           %% remove this line if only one editor
+            % ,draft,draftmode
+		  ]{langscibook}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{localmetadata.tex}
+\input{localpackages.tex}
+\input{localhyphenation.tex}
+\input{localcommands.tex}
+\addbibresource{localbibliography.bib}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%             Frontmatter                      %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\maketitle
+\frontmatter
+% %% uncomment if you have preface and/or acknowledgements
+
+\currentpdfbookmark{Contents}{name} % adds a PDF bookmark
+{\sloppy\tableofcontents}
+
+%% sections without authors
+% \include{chapters/preface}
+% \include{chapters/acknowledgments}
+
+% \includepaper{chapters/prefaceEd}
+
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%             Chapters                         %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \includepaper{chapters/intro}
+\part{New theoretical and methodological insights into formulaic language}
+\includepaper{chapters/bybee}
+\includepaper{chapters/forsyth}%does not follow guidelines
+\includepaper{chapters/pezik}
+\part{Formulaic language in language learning contexts}
+\includepaper{chapters/cutler}
+\includepaper{chapters/wang}
+\part{Descriptive research on formulaic language}
+\includepaper{chapters/buerki}
+\includepaper{chapters/grabowski}
+\includepaper{chapters/mikhailov}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%             Backmatter                       %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% There is normally no need to change the backmatter section
+\input{backmatter.tex}
+\end{document}
