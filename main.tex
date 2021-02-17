@@ -1,8 +1,10 @@
-\documentclass[output=book,collection,multiauthors
-            ,colorlinks, citecolor=brown
-           %% remove this line if only one editor
-            % ,draft,draftmode
-		  ]{langscibook}
+\documentclass[output=book,
+               collection,
+               multiauthors,
+%             colorlinks, citecolor=brown,
+%             draft,
+%             draftmode,
+]{langscibook}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{localmetadata.tex}
@@ -22,6 +24,8 @@
 
 \currentpdfbookmark{Contents}{name} % adds a PDF bookmark
 {\sloppy\tableofcontents}
+
+\SetupAffiliations{output in groups=false}
 
 %% sections without authors
 % \include{chapters/preface}
