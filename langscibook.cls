@@ -327,6 +327,7 @@
 
 %% standard commands
 \usepackage{langsci-basic}
+\usepackage{langsci-affiliations}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %      Covers
@@ -412,7 +413,13 @@
             right,
             below = 11.2mm of lspcls_covertitle.south,
             text width=#2
-            ] {\color{#1}\nohyphens{\lsEditorPrefix\@author\par}};
+            ] {\color{#1}\nohyphens{%
+            \lsEditorPrefix%
+            \ResolveAffiliations[output in groups=false, 
+                                 output affiliation=false, 
+                                 output authors font=\lsCoverAuthorFont,
+                                 separator between two=\\]
+                                 {\@author}\par}};
     \else % If yes, create a node for subtitle and author
     \node [ font=\lsCoverSubTitleFont,
             below = 8mm of lspcls_covertitle.south,
@@ -424,7 +431,13 @@
             right,
             below = 11.2mm of lspcls_coversubtitle.south,
             text width=#2
-            ] {\color{#1}\nohyphens{\lsEditorPrefix\@author\par}};
+            ] {\color{#1}\nohyphens{%
+            \lsEditorPrefix%
+            \ResolveAffiliations[output in groups=false, 
+                                 output affiliation=false, 
+                                 output authors font=\lsCoverAuthorFont,
+                                 separator between two=\\]
+                                 {\@author}\par}};
     \fi
     }
 
@@ -728,7 +741,7 @@
       [  
         entrynumberformat=\addfontfeature{Numbers={Monospaced,Lining}},
         pagenumberformat=\addfontfeature{Numbers={Monospaced,Lining}}\bfseries,
-        raggedentrytext=true
+        raggedentrytext=true,
       ]
       {tocline}
       {chapter}
@@ -744,6 +757,8 @@
     
     % In collected volumes, adjust the spacing for unnumbered chapters
     \ifbool{collection}{
+    \BeforeStartingTOC[toc]{\SetupAffiliations{output affiliation=false,
+                                               output authors font=\normalfont}}
       \renewcommand{\addtocentrydefault}[3]{%
         \Ifstr{#2}{}{%
           \addcontentsline{toc}{#1}{\protect\numberline{~}#3}%
@@ -1024,8 +1039,8 @@
             \ifbool{collection}
               {editor = {\unexpanded\expandafter{\@author}},}
               {author = {\unexpanded\expandafter{\@author}},}
-            title = {\unexpanded\expandafter{\@title}},
-            \if\@subtitle\empty\else subtitle = {\unexpanded\expandafter{\@subtitle}},\fi
+            title = {{\unexpanded\expandafter{\@title}}},
+            \if\@subtitle\empty\else subtitle = {{\unexpanded\expandafter{\@subtitle}}},\fi
             year = {\lsYear},
             series = {\lsSeriesTitle},
             number = {\lsSeriesNumber},
@@ -1811,8 +1826,10 @@ Storage and cataloguing done by \storageinstitution\\[3ex]
         \renewcommand{\maketitle}{%
             % With \setchapterpreamble from scrbook, we ensure that the author(s)
             % and their affiliation(s) are part of the \chapter block.
-            \setchapterpreamble[u]{\onlyAuthor\lsCollectionPaperAuthor}
-            \chapter[tocentry={\titleToToC~\newline{\normalfont \@author}}]{\titleTemp}
+            \setchapterpreamble[u]{\ResolveAffiliations{\@author}}
+            \chapter
+            [tocentry={\titleToToC~\newline{\normalfont\ResolveAffiliations{\@author}}}]
+            {\titleTemp}
             \vspace{\baselineskip}
             \begin{quote}
                 \small\lsCollectionPaperAbstract
@@ -1832,7 +1849,8 @@ Storage and cataloguing done by \storageinstitution\\[3ex]
             \enlargethispage{-1\baselineskip}
         }
         \ohead{}
-        \lehead{\lsCollectionPaperHeaderAuthor}
+        \lehead{\ResolveAffiliations[output affiliation=false,
+                                     output authors font=\normalfont\slshape]{\@author}}
         \rohead{\lsCollectionPaperHeaderTitle}
         % The following ensure that a chapter is treated as a heading, which
         % controls page break penalties and indentation following the heading.

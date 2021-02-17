@@ -1,6 +1,5 @@
 \documentclass[output=paper]{langscibook}
-\author{Richard Forsyth\affiliation{%intentionally left blank
-}\orcid{}}
+\author{Richard Forsyth\affiliation{}}%affiliation intentionally left blank
 \title{Cascading collocations: Collocades as correlates of formulaic language}
 \abstract{This chapter focuses on a technique for detecting, measuring and displaying traces of formulaic language. For this purpose, a suite of computational procedures has been developed in order to quantify the degree to which individual texts and text types incorporate inflexible sequences of words. This development is predicated on the assumption that, even if we have no precise definition of formulaic language, it is widely accepted that it is characterized by repetition of fixed sequences. The method involves compiling a \textit{formulexicon} from a corpus of two or more text types and then using coverage by elements of that \textit{formulexicon} as an index of the degree to which a text, possibly absent from the training corpus, is pervaded by formulaic sequences. The problem of deciding what lengths of $n$-grams are warranted by the data is dealt with by the simple expedient of binarizing coverage counts by $n$-grams of various lengths. Trials on a variety of text types show that this allows \textit{collocades} -- cascades of collocations, whose lengths are not pre-determined -- to emerge from the data. Here the term \textit{collocation} is used in its broader sense, as in "collocations are co-occurrences of words" \citep[14]{Gries2009}. Software in Python~3 that implements this approach is available online under a Creative Commons licence. Examples of applying these procedures to a number of corpora illustrate some of the uses of this approach.}
 
@@ -16,6 +15,7 @@
 
 % \shorttitlerunninghead{}
 \begin{document}
+\SetupAffiliations{output affiliation=false}
 \lstset{frame=lines}
 \maketitle
 
@@ -87,8 +87,7 @@ In \tabref{tab:forsyth:2} text lengths are given in tokens, which are normally w
 The suite of programs in Python~3 that constitute the formulib package and their functions are summarized in \tabref{tab:forsyth:3}.
 
 \begin{table}
-\caption{Programs of formulib and their functions}
-\label{tab:3}
+\caption{Programs of formulib and their functions\label{tab:forsyth:3}}
 \begin{tabularx}{\textwidth}{>{\ttfamily}lQ}
 \lsptoprule
 Program & Function\\
@@ -164,7 +163,7 @@ as well as shorter subsequences, probably going down to 2-grams such as "a bette
 
 %%please move \begin{table} just above \begin{tabular
 \begin{table}
-\caption{Computing coverage in formulex\label{tab:4}}
+\caption{Computing coverage in formulex\label{tab:forsyth:4}}
 \begin{tabular}{lclll}
 \lsptoprule
 (word) token & match count & \multicolumn{3}{c}{covering $n$-gram(s)}\\\midrule
