@@ -20,8 +20,8 @@ The first part, with three chapters, presents new theoretical and methodological
 insights as well as their practical application in the development of custom-designed
 software tools for identification and exploration of formulaic language in texts. Two papers 
 in the second part explore formulaic language in the context of language learning.
-Finally, the third part, with three chapters, showcases descriptive research on
-formulaic language conducted primarily from corpus linguistic and translation studies
+Finally, the third part, with three chapters, showcases research on
+formulaic language conducted primarily from discourse and translation studies
 perspectives. The volume will be of interest to anyone involved in the study of formulaic
 language either from a theoretical or a practical perspective.
 

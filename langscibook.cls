@@ -137,6 +137,7 @@
 \newbool{uniformtopskip}
 \newbool{oldstylenumbers}
 \newbool{tblseight}%for chinesefonts in tbls series page
+\newbool{lsISBNTwoDigitAddon}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %     Option handling
@@ -349,7 +350,7 @@
     % Argument 1: White margin that encompasses the coloured title and backtitle form. Input: 12.34mm
     % Argument 2: Height of the coloured title and backtitle form and of the spine. Input: 12.45cm
     % Argument 3: Width  of the coloured title and backtitle form. Input: 12.45cm
-    \newcommand{\covergeometry}[3]{
+    \newcommand{\covergeometry}[3]{%
         \begin{pgfonlayer}{lspcls_bg} % Draw on the background layer
         \node [ bg, % Draw the coloured background on the front cover
                 left = #1 of current page.east,
@@ -373,7 +374,7 @@
 
     % Generates the content of the back cover
     % Argument 1: Text width, corresponding to Argument 1 of \frontcovertoptext
-    \newcommand{\backcover}[1]{
+    \newcommand{\backcover}[1]{%
     \node [ font=\lsBackTitleFont,
             right,
             below right = 10mm and 7.5mm of CoverColouredRectangleBack.north west,
@@ -384,20 +385,25 @@
             text width=#1,
             align=justify
             ] {\color{white}\parindent=15pt\lsBackBody};
-    \node [  below right = 192.5mm and 97.5mm of CoverColouredRectangleBack.north west,
-            text width=4cm] {%
-        \colorbox{white}{
-            \begin{pspicture}(0,0)(4.1,1in)
-                \psbarcode[transx=.4,transy=.3]{\lsISBNcover}{includetext height=.7}{isbn}%
-            \end{pspicture}
-        }
+    \node [ above left = 10mm and 7.5mm of CoverColouredRectangleBack.south east ] {%
+        \colorbox{white}{%
+            \ifbool{lsISBNTwoDigitAddon}{%
+              \begin{pspicture}(0,0)(5.25,1in)
+                \psbarcode[transx=.4,transy=.3]{\lsISBNcover\ \lsISBNhardcoverTwoDigitAddon}{includetext guardwhitespace height=.7}{isbn}
+              \end{pspicture}%
+            }{%
+              \begin{pspicture}(0,0)(4.15,1in)
+                  \psbarcode[transx=.4,transy=.3]{\lsISBNcover}{includetext height=.7}{isbn}%
+              \end{pspicture}%
+            }%
+        }%
         };
     }
 
     % Generates the content on the front cover, including title, author, subtitle. See below for remaining commands
     % Argument 1: Text width on the front cover. Input: 12.34mm
     % Argument 2: Font size on the front cover. Adjust to compensate varying text width. Input: 12.34pt
-    \newcommand{\frontcovertoptext}[3][white]{
+    \newcommand{\frontcovertoptext}[3][white]{%
     \renewcommand{\and}{\\}
     \renewcommand{\lastand}{\\}
     \renewcommand{\newlineCover}{\\}
@@ -442,7 +448,7 @@
     }
 
     % Generates the bottom half of the front cover content: series, series number, logo.
-    \newcommand{\coverbottomtext}[1][white]{
+    \newcommand{\coverbottomtext}[1][white]{%
     \node [ above right = 18.5mm and -.1mm of CoverColouredRectangleFront.south west,
             rectangle,
             fill=white,
@@ -741,7 +747,7 @@
       [  
         entrynumberformat=\addfontfeature{Numbers={Monospaced,Lining}},
         pagenumberformat=\addfontfeature{Numbers={Monospaced,Lining}}\bfseries,
-        raggedentrytext=true,
+        raggedentrytext=true
       ]
       {tocline}
       {chapter}
@@ -1020,7 +1026,16 @@
 \newcommand{\ISBNdigital}[1]{\renewcommand{\lsISBNdigital}{#1}}
 \newcommand{\ISBNsoftcover}[1]{\renewcommand{\lsISBNsoftcover}{#1}}
 \newcommand{\ISBNsoftcoverus}[1]{\renewcommand{\lsISBNsoftcoverus}{#1}}
-\newcommand{\ISBNhardcover}[1]{\renewcommand{\lsISBNhardcover}{#1}}
+\RequirePackage{xparse}
+\NewDocumentCommand { \ISBNhardcover } { o m }
+  {%
+    \renewcommand{\lsISBNhardcover}{#2}%
+    \IfValueT{#1}
+    {%
+      \booltrue{lsISBNTwoDigitAddon}
+      \newcommand{\lsISBNhardcoverTwoDigitAddon}{#1}
+    }
+  }
 
 \newcommand{\URL}[1]{\renewcommand{\lsURL}{#1}}
 \newcommand{\Series}[1]{\renewcommand{\lsSeries}{#1}}
@@ -1826,11 +1841,10 @@ Storage and cataloguing done by \storageinstitution\\[3ex]
         \renewcommand{\maketitle}{%
             % With \setchapterpreamble from scrbook, we ensure that the author(s)
             % and their affiliation(s) are part of the \chapter block.
-            \setchapterpreamble[u]{\ResolveAffiliations{\@author}}
+            \setchapterpreamble[u]{\ResolveAffiliations{\@author}\\}
             \chapter
             [tocentry={\titleToToC~\newline{\normalfont\ResolveAffiliations{\@author}}}]
             {\titleTemp}
-            \vspace{\baselineskip}
             \begin{quote}
                 \small\lsCollectionPaperAbstract
             \end{quote}
@@ -2054,10 +2068,20 @@ Storage and cataloguing done by \storageinstitution\\[3ex]
 \newlength{\LSPTmp}
 \ifbool{uniformtopskip}{}{% Donald Arseneau's automatic handling of page breaking from comp.text.tex: https://groups.google.com/d/topic/comp.text.tex/3eehwzortPg/discussion
     % With the optimisations from the memoir class. The memoir class has relative instead of absolute values.
+    \newlength{\lsSaveValueTopSkip}
+    \lsSaveValueTopSkip=\topskip
+    \let\lsSaveValueTextTop\@texttop
+    \let\lsSaveValueTextBottom\@textbottom
+    \def\restorebottom{%
+      \topskip=\lsSaveValueTopSkip
+      \let\@texttop\lsSaveValueTextTop
+      \let\@textbottom\lsSaveValueTextBottom
+    }
+    
     \def\sloppybottom{%
-    \def\@textbottom{\vskip \z@ \@plus.0001fil \@minus .95\topskip}%
-    \topskip=1\topskip \@plus 0.625\topskip \@minus .95\topskip%
-    \def\@texttop{\vskip \z@ \@plus -0.625\topskip \@minus -0.95\topskip}%
+      \def\@textbottom{\vskip \z@ \@plus.0001fil \@minus .95\topskip}%
+      \topskip=1\topskip \@plus 0.625\topskip \@minus .95\topskip%
+      \def\@texttop{\vskip \z@ \@plus -0.625\topskip \@minus -0.95\topskip}%
     }
     \sloppybottom
 }
